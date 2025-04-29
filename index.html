@@ -18,7 +18,6 @@
         
         /* Custom video controls */
         .video-controls { 
-            pointer-events: auto;
             position: absolute; 
             bottom: 0; 
             left: 0; 
@@ -37,11 +36,6 @@
                 opacity: 1;
             }
         }
-        @media (hover: none) {
-  .video-controls {
-    opacity: 1 !important;
-  }
-}
         
         .control-left, .control-right {
             display: flex;
@@ -49,14 +43,13 @@
         }
         
         .control-button { 
-            min-width: 48px;
-            min-height: 48px;
             background: none; 
-            border-radius: 6px;
+            border: none; 
             color: white; 
             font-size: 16px; 
             cursor: pointer; 
             padding: 5px 10px; 
+            width: 40px; 
             text-align: center; 
         }
         
@@ -98,7 +91,7 @@
         .delay-indicator i { margin-right: 5px; }
         
         .logo { 
-            height: 20px;
+            height: 0px;
             margin-right: 10px;
         }
         
@@ -311,72 +304,52 @@
                 initPlayer();
             }
 
-            // Tambahkan variabel global di luar fungsi:
-let hideControlsTimeout = null;
+            function setupCustomControls() {
+                // Play/Pause button
+                playPauseBtn.addEventListener('click', togglePlayPause);
+                video.addEventListener('click', togglePlayPause);
+                
+                // Fullscreen button
+                fullscreenBtn.addEventListener('click', toggleFullScreen);
+                
+                // Video state listeners
+                video.addEventListener('play', updatePlayPauseButton);
+                video.addEventListener('pause', updatePlayPauseButton);
+                
+                // Listen for fullscreen changes
+                document.addEventListener('fullscreenchange', updateFullscreenButton);
+                document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+                document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+                document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+                
+                // Auto-hide controls
+                let hideControlsTimeout;
 
-// Tambahkan fungsi berikut:
-function showControls() {
-    const controls = document.querySelector('.video-controls');
-    controls.classList.add('visible');
-    videoContainer.style.cursor = 'auto';
-}
+                function hideControls() {
+                    const controls = document.querySelector('.video-controls');
+                    controls.style.opacity = '0';
+                    // Also hide quality menu when hiding controls
+                    qualityMenu.classList.remove('visible');
+                }
 
-function hideControls() {
-    // Jangan sembunyikan jika video dijeda atau menu kualitas terbuka
-    if (
-        video.paused ||
-        (qualityMenu && qualityMenu.classList.contains('visible'))
-    ) {
-        showControls();
-        return;
-    }
-    const controls = document.querySelector('.video-controls');
-    controls.classList.remove('visible');
-    videoContainer.style.cursor = 'none';
-}
+                function resetHideControlsTimer() {
+                    clearTimeout(hideControlsTimeout);
+                    const controls = document.querySelector('.video-controls');
+                    controls.style.opacity = '1';
+                    hideControlsTimeout = setTimeout(hideControls, 3000);
+                }
 
-function resetHideControlsTimer() {
-    clearTimeout(hideControlsTimeout);
-    showControls();
-    if (!video.paused && !(qualityMenu && qualityMenu.classList.contains('visible'))) {
-        hideControlsTimeout = setTimeout(hideControls, 2500); // 2.5 detik
-    }
-}
+                // User interactions
+                videoContainer.addEventListener('mousemove', resetHideControlsTimer);
+                videoContainer.addEventListener('touchstart', resetHideControlsTimer);
+                video.addEventListener('click', resetHideControlsTimer);
 
-// Update setupCustomControls:
-function setupCustomControls() {
-    playPauseBtn.addEventListener('click', togglePlayPause);
-    video.addEventListener('click', togglePlayPause);
-
-    fullscreenBtn.addEventListener('click', toggleFullScreen);
-
-    video.addEventListener('play', updatePlayPauseButton);
-    video.addEventListener('pause', updatePlayPauseButton);
-
-    document.addEventListener('fullscreenchange', updateFullscreenButton);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-    document.addEventListener('mozfullscreenchange', updateFullscreenButton);
-    document.addEventListener('MSFullscreenChange', updateFullscreenButton);
-
-    // Event listener untuk interaksi user di semua perangkat
-    ['mousemove', 'touchstart', 'touchmove', 'click'].forEach(evt => {
-        videoContainer.addEventListener(evt, resetHideControlsTimer);
-    });
-
-    // Pastikan kontrol selalu muncul saat video dijeda
-    video.addEventListener('pause', showControls);
-    video.addEventListener('play', resetHideControlsTimer);
-
-    // Jangan auto-hide jika menu kualitas terbuka
-    if (qualityMenu) {
-        qualityMenu.addEventListener('mouseenter', showControls);
-        qualityMenu.addEventListener('mouseleave', resetHideControlsTimer);
-    }
-
-    // Inisialisasi: tampilkan kontrol saat load
-    showControls();
-    startStreamMonitoring();
-}
+                // Initialize auto-hide when video plays
+                video.addEventListener('play', resetHideControlsTimer);
+                
+                // Start monitoring stream
+                startStreamMonitoring();
+            }
             
             function setupQualityControls() {
                 // Quality button toggle menu
