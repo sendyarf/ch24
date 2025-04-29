@@ -1,0 +1,244 @@
+body { 
+    margin: 0; 
+    padding: 0; 
+    background-color: #000; 
+    color: #fff; 
+    font-family: Arial, sans-serif; 
+    height: 100vh; 
+    width: 100vw; 
+    overflow: hidden; 
+    -webkit-user-select: none;
+    user-select: none;
+}
+.ViostreamIframe { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+}
+#videoContainer { 
+    position: relative; 
+    width: 100%; 
+    height: 100%; 
+}
+video { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; 
+    background: #000;
+}
+#error { 
+    text-align: center; 
+    padding: 20px; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background: rgba(0,0,0,0.7); 
+    border-radius: 5px; 
+}
+
+/* Video controls */
+.video-controls { 
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); 
+    padding: 8px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    transition: opacity 0.3s; 
+    opacity: 0; 
+    z-index: 10;
+}
+
+.video-controls.visible {
+    opacity: 1;
+}
+
+.control-left, .control-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-button { 
+    background: rgba(0,0,0,0.5); 
+    border: none; 
+    color: white; 
+    font-size: 18px; 
+    cursor: pointer; 
+    padding: 10px; 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    touch-action: manipulation;
+    transition: background 0.2s;
+}
+
+.control-button:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.control-button:active {
+    background: rgba(255,255,255,0.3);
+}
+
+.live-indicator { 
+    background-color: #f00; 
+    color: white; 
+    font-weight: bold; 
+    padding: 6px 12px; 
+    border-radius: 4px; 
+    font-size: clamp(10px, 2.5vw, 12px);
+    display: flex; 
+    align-items: center; 
+    gap: 6px;
+}
+
+.live-indicator.delayed { 
+    display: none; 
+}
+
+.live-indicator .dot { 
+    width: 8px; 
+    height: 8px; 
+    background-color: white; 
+    border-radius: 50%; 
+}
+
+.delay-indicator {
+    background-color: #ff9800;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: clamp(10px, 2.5vw, 12px);
+    display: none;
+    align-items: center;
+    gap: 6px;
+}
+
+.delay-indicator.visible {
+    display: flex;
+}
+
+.delay-indicator i { 
+    font-size: 12px; 
+}
+
+.logo { 
+    height: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.logo img { 
+    height: 100%; 
+    max-width: 100px; 
+    object-fit: contain;
+}
+
+/* Quality menu */
+.quality-menu {
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+    background: rgba(0,0,0,0.9);
+    border-radius: 6px;
+    padding: 12px;
+    z-index: 20;
+    display: none;
+    min-width: 160px;
+    max-width: 90vw;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.quality-menu.visible {
+    display: block;
+}
+
+.quality-menu-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 6px;
+}
+
+.quality-menu-item {
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+}
+
+.quality-menu-item:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.quality-menu-item.active {
+    background: rgba(0,123,255,0.5);
+}
+
+.quality-menu-item i {
+    width: 16px;
+    text-align: center;
+}
+
+/* Fullscreen fixes */
+:fullscreen, :-webkit-full-screen, :-moz-full-screen, :-ms-fullscreen { 
+    width: 100vw; 
+    height: 100vh; 
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+
+
+/* Prevent text selection */
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .control-button {
+        font-size: 16px;
+        width: 36px;
+        height: 36px;
+        padding: 8px;
+    }
+    .logo {
+        height: 24px;
+    }
+    .quality-menu {
+        min-width: 140px;
+    }
+    .live-indicator, .delay-indicator {
+        padding: 5px 10px;
+        font-size: clamp(9px, 2vw, 11px);
+    }
+    .live-indicator .dot {
+        width: 7px;
+        height: 7px;
+    }
+    .delay-indicator i {
+        font-size: 11px;
+    }
+}
