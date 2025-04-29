@@ -5,25 +5,58 @@
     <meta content='noindex, nofollow, noarchive' name='robots'/>
     <meta content='no-referrer' name='referrer'/>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'/>
-    <!-- Shaka Player -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js'></script>
-    <!-- Font Awesome -->
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
     <style>
-        body { margin: 0; padding: 0; background-color: #000; color: #fff; font-family: Arial, sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
-        .ViostreamIframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        #videoContainer { position: relative; width: 100%; height: 100%; }
-        video { width: 100%; height: 100%; object-fit: contain; }
-        #error { text-align: center; padding: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border-radius: 5px; }
-        
-        /* Custom video controls */
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: #000; 
+            color: #fff; 
+            font-family: Arial, sans-serif; 
+            height: 100vh; 
+            width: 100vw; 
+            overflow: hidden; 
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .ViostreamIframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+        }
+        #videoContainer { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+        }
+        video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            background: #000;
+        }
+        #error { 
+            text-align: center; 
+            padding: 20px; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background: rgba(0,0,0,0.7); 
+            border-radius: 5px; 
+        }
+
+        /* Video controls */
         .video-controls { 
             position: absolute; 
             bottom: 0; 
             left: 0; 
             right: 0; 
-            background: rgba(0,0,0,0.5); 
-            padding: 10px; 
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); 
+            padding: 8px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -31,172 +64,229 @@
             opacity: 0; 
             z-index: 10;
         }
-        @media (hover: hover) {
-            #videoContainer:hover .video-controls, .video-controls:hover {
-                opacity: 1;
-            }
+
+        .video-controls.visible {
+            opacity: 1;
         }
-        
+
         .control-left, .control-right {
             display: flex;
             align-items: center;
+            gap: 8px;
         }
-        
+
         .control-button { 
-            background: none; 
+            background: rgba(0,0,0,0.5); 
             border: none; 
             color: white; 
-            font-size: 16px; 
+            font-size: 18px; 
             cursor: pointer; 
-            padding: 5px 10px; 
+            padding: 10px; 
             width: 40px; 
-            text-align: center; 
+            height: 40px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            touch-action: manipulation;
+            transition: background 0.2s;
         }
-        
+
+        .control-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .control-button:active {
+            background: rgba(255,255,255,0.3);
+        }
+
         .live-indicator { 
-            margin: 0 10px; 
             background-color: #f00; 
             color: white; 
             font-weight: bold; 
-            padding: 3px 8px; 
-            border-radius: 3px; 
-            font-size: clamp(10px, 2vw, 12px);
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            font-size: clamp(10px, 2.5vw, 12px);
             display: flex; 
             align-items: center; 
+            gap: 6px;
         }
-        
-        .live-indicator.delayed { background-color: #ff9800; }
+
+        .live-indicator.delayed { 
+            display: none; 
+        }
+
         .live-indicator .dot { 
-            display: inline-block; 
             width: 8px; 
             height: 8px; 
             background-color: white; 
             border-radius: 50%; 
-            margin-right: 5px; 
         }
-        
-        .live-indicator.delayed .dot { animation: blink 1s infinite; }
-        
+
         .delay-indicator {
-            background-color: rgba(255, 152, 0, 0.8);
+            background-color: #ff9800;
             color: white;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: clamp(10px, 2vw, 12px);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: clamp(10px, 2.5vw, 12px);
             display: none;
-            margin-left: 10px;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .delay-indicator.visible {
+            display: flex;
+        }
+
+        .delay-indicator i { 
+            font-size: 12px; 
+        }
+
+        .logo { 
+            height: 28px;
+            display: flex;
             align-items: center;
         }
-        
-        .delay-indicator i { margin-right: 5px; }
-        
-        .logo { 
-            height: 0px;
-            margin-right: 10px;
+
+        .logo img { 
+            height: 100%; 
+            max-width: 100px; 
+            object-fit: contain;
         }
-        
-        .logo img { height: 100%; }
-        
+
         /* Quality menu */
         .quality-menu {
             position: absolute;
-            bottom: 50px;
-            right: 50px;
-            background: rgba(0,0,0,0.8);
-            border-radius: 5px;
-            padding: 10px;
+            bottom: 60px;
+            right: 10px;
+            background: rgba(0,0,0,0.9);
+            border-radius: 6px;
+            padding: 12px;
             z-index: 20;
             display: none;
-            width: 150px;
+            min-width: 160px;
+            max-width: 90vw;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        
+
         .quality-menu.visible {
             display: block;
         }
-        
+
         .quality-menu-title {
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 10px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.3);
-            padding-bottom: 5px;
+            padding-bottom: 6px;
         }
-        
+
         .quality-menu-item {
-            padding: 5px 10px;
+            padding: 8px;
             cursor: pointer;
             transition: background 0.2s;
-            font-size: 13px;
+            font-size: 12px;
             display: flex;
             align-items: center;
+            gap: 8px;
+            border-radius: 4px;
         }
-        
+
         .quality-menu-item:hover {
             background: rgba(255,255,255,0.2);
         }
-        
+
         .quality-menu-item.active {
             background: rgba(0,123,255,0.5);
         }
-        
+
         .quality-menu-item i {
-            margin-right: 5px;
-            width: 15px;
+            width: 16px;
             text-align: center;
         }
-        
-        /* Fullscreen fixes for mobile */
-        :fullscreen { width: 100vw; height: 100vh; }
-        :-webkit-full-screen { width: 100vw; height: 100vh; }
-        :-moz-full-screen { width: 100vw; height: 100vh; }
-        :-ms-fullscreen { width: 100vw; height: 100vh; }
-        
-        /* Animation for the live dot when delayed */
+
+        /* Fullscreen fixes */
+        :fullscreen, :-webkit-full-screen, :-moz-full-screen, :-ms-fullscreen { 
+            width: 100vw; 
+            height: 100vh; 
+        }
+
         @keyframes blink {
             0% { opacity: 1; }
             50% { opacity: 0.3; }
             100% { opacity: 1; }
+        }
+
+
+
+        /* Prevent text selection */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        @media (max-width: 768px) {
+            .control-button {
+                font-size: 16px;
+                width: 36px;
+                height: 36px;
+                padding: 8px;
+            }
+            .logo {
+                height: 24px;
+            }
+            .quality-menu {
+                min-width: 140px;
+            }
+            .live-indicator, .delay-indicator {
+                padding: 5px 10px;
+                font-size: clamp(9px, 2vw, 11px);
+            }
+            .live-indicator .dot {
+                width: 7px;
+                height: 7px;
+            }
+            .delay-indicator i {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
 <body>
     <div class='ViostreamIframe'>
         <div id='videoContainer'>
-            <video id='player' playsinline='' webkit-playsinline=''></video>
+            <video id='player' playsinline='' webkit-playsinline='' muted></video>
             
-            <!-- Quality menu -->
             <div class='quality-menu' id='qualityMenu'>
                 <div class='quality-menu-title'>Video Quality</div>
-                <div id='qualityOptions'>
-                    <!-- Quality options will be populated here -->
-                </div>
+                <div id='qualityOptions'></div>
                 <div class='quality-menu-item' id='autoQuality'>
                     <i class='fas fa-check'></i> Auto (Default)
                 </div>
             </div>
             
-            <!-- Custom controls -->
             <div class='video-controls'>
                 <div class='control-left'>
-                    <button class='control-button' id='playPauseBtn'>
+                    <button class='control-button' id='playPauseBtn' aria-label='Play/Pause'>
                         <i class='fas fa-play' id='playIcon'></i>
                     </button>
                     <div class='live-indicator' id='liveIndicator'>
                         <span class='dot'></span>LIVE
                     </div>
                     <div class='delay-indicator' id='delayIndicator'>
-                        <i class='fas fa-exclamation-triangle'></i>DELAY: <span id='delaySeconds'>0</span>s
+                        <i class='fas fa-exclamation-triangle'></i><span id='delaySeconds'>0</span>s
                     </div>
                 </div>
                 <div class='control-right'>
-                    <a class='logo' href='https://linktr.ee/futbol404' target='_blank'>
-                        <img alt='Logo' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg01MWui2j9yeMDbKrY1yZZYNHDtDUEyu9ANsm4oiaVxR0RrUwweJDHvpPqn2ipzlNAjz8tyvLiYlXJ2v0nmsIzwonoP_og483vPNENopMnHiihmzhDmAcSkU4ne7MxW5V8YuiKJ4pCUml9Uh8Cq4mpn2wTVkwncDHN2rvVusK_5ZZgz231lCIMKKWWo_fB/s320/GOVOETLOGO.png'/>
+                    <a class='logo' href='https://linktr.ee/futbol404' target='_blank' aria-label='Brand Logo'>
+                        <img alt='Futbol404 Logo' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg01MWui2j9yeMDbKrY1yZZYNHDtDUEyu9ANsm4oiaVxR0RrUwweJDHvpPqn2ipzlNAjz8tyvLiYlXJ2v0nmsIzwonoP_og483vPNENopMnHiihmzhDmAcSkU4ne7MxW5V8YuiKJ4pCUml9Uh8Cq4mpn2wTVkwncDHN2rvVusK_5ZZgz231lCIMKKWWo_fB/s320/GOVOETLOGO.png' onerror='this.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="'>
                     </a>
-                    <button class='control-button' id='qualityBtn' title='Quality Settings'>
+                    <button class='control-button' id='qualityBtn' aria-label='Quality Settings'>
                         <i class='fas fa-cog'></i>
                     </button>
-                    <button class='control-button' id='fullscreenBtn'>
+                    <button class='control-button' id='fullscreenBtn' aria-label='Toggle Fullscreen'>
                         <i class='fas fa-expand' id='fullscreenIcon'></i>
                     </button>
                 </div>
@@ -206,7 +296,6 @@
     <div id='error' style='display: none;'>Access Denied</div>
     
     <script>
-        // Domain restriction removed to allow usage on any website
         {
             function getParameterByName(name) {
                 name = name.replace(/[\[\]]/g, "\\$&");
@@ -238,8 +327,6 @@
             var config = ConfiguracionCanales[id];
             let shakaPlayer = null;
             let video = null;
-            
-            // Custom controls elements
             let playPauseBtn = null;
             let playIcon = null;
             let liveIndicator = null;
@@ -248,27 +335,19 @@
             let fullscreenIcon = null;
             let videoContainer = null;
             let delaySeconds = null;
-            
-            // Quality control elements
             let qualityBtn = null;
             let qualityMenu = null;
             let qualityOptions = null;
             let autoQuality = null;
-            
-            // Stream monitoring variables
             let isLive = true;
-            let delayTimer = null;
             let delayAmount = 0;
-            
-            // Quality variables
             let availableQualities = [];
             let currentQuality = "auto";
-            
-            // Initialize on DOM content loaded
+            let controlsTimeout = null;
+
             document.addEventListener('DOMContentLoaded', initApp);
 
             function initApp() {
-                // Initialize UI elements
                 video = document.getElementById('player');
                 playPauseBtn = document.getElementById('playPauseBtn');
                 playIcon = document.getElementById('playIcon');
@@ -282,17 +361,12 @@
                 qualityMenu = document.getElementById('qualityMenu');
                 qualityOptions = document.getElementById('qualityOptions');
                 autoQuality = document.getElementById('autoQuality');
-                
-                // Set up event listeners for custom controls
+
                 setupCustomControls();
-                
-                // Set up quality controls
                 setupQualityControls();
-                
-                // Install built-in polyfills to patch browser incompatibilities
+
                 shaka.polyfill.installAll();
 
-                // Check if the browser supports Shaka Player
                 if (!shaka.Player.isBrowserSupported()) {
                     console.error('Browser not supported!');
                     document.getElementById('error').textContent = 'Browser not supported for video playback.';
@@ -300,105 +374,97 @@
                     return;
                 }
 
-                // Initialize the player
                 initPlayer();
             }
 
             function setupCustomControls() {
-                // Play/Pause button
                 playPauseBtn.addEventListener('click', togglePlayPause);
-                video.addEventListener('click', togglePlayPause);
-                
-                // Fullscreen button
                 fullscreenBtn.addEventListener('click', toggleFullScreen);
-                
-                // Video state listeners
                 video.addEventListener('play', updatePlayPauseButton);
                 video.addEventListener('pause', updatePlayPauseButton);
-                
-                // Listen for fullscreen changes
+
                 document.addEventListener('fullscreenchange', updateFullscreenButton);
                 document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
                 document.addEventListener('mozfullscreenchange', updateFullscreenButton);
                 document.addEventListener('MSFullscreenChange', updateFullscreenButton);
-                
-                // Auto-hide controls
-                let hideControlsTimeout;
+
+                const controls = document.querySelector('.video-controls');
+                const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+                function showControls() {
+                    clearTimeout(controlsTimeout);
+                    controls.classList.add('visible');
+                    controlsTimeout = setTimeout(hideControls, 3000);
+                }
 
                 function hideControls() {
-                    const controls = document.querySelector('.video-controls');
-                    controls.style.opacity = '0';
-                    // Also hide quality menu when hiding controls
+                    controls.classList.remove('visible');
                     qualityMenu.classList.remove('visible');
                 }
 
-                function resetHideControlsTimer() {
-                    clearTimeout(hideControlsTimeout);
-                    const controls = document.querySelector('.video-controls');
-                    controls.style.opacity = '1';
-                    hideControlsTimeout = setTimeout(hideControls, 3000);
-                }
+                videoContainer.addEventListener('mousemove', showControls);
+                videoContainer.addEventListener('touchstart', (e) => {
+                    if (e.target === video) {
+                        e.preventDefault();
+                        showControls();
+                    }
+                });
 
-                // User interactions
-                videoContainer.addEventListener('mousemove', resetHideControlsTimer);
-                videoContainer.addEventListener('touchstart', resetHideControlsTimer);
-                video.addEventListener('click', resetHideControlsTimer);
+                video.addEventListener('click', (e) => {
+                    if (!controls.contains(e.target)) {
+                        togglePlayPause();
+                        showControls();
+                    }
+                });
 
-                // Initialize auto-hide when video plays
-                video.addEventListener('play', resetHideControlsTimer);
-                
-                // Start monitoring stream
+                video.addEventListener('play', showControls);
+
+                controls.addEventListener('mousemove', (e) => {
+                    e.stopPropagation();
+                    showControls();
+                });
+                controls.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                    showControls();
+                });
+
                 startStreamMonitoring();
             }
-            
+
             function setupQualityControls() {
-                // Quality button toggle menu
-                qualityBtn.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Prevent event bubbling
+                qualityBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     qualityMenu.classList.toggle('visible');
+                    clearTimeout(controlsTimeout);
+                    controlsTimeout = setTimeout(hideControls, 5000);
                 });
-                
-                // Close quality menu when clicking outside
-                document.addEventListener('click', function(e) {
+
+                document.addEventListener('click', (e) => {
                     if (!qualityMenu.contains(e.target) && e.target !== qualityBtn) {
                         qualityMenu.classList.remove('visible');
                     }
                 });
-                
-                // Auto quality option
-                autoQuality.addEventListener('click', function() {
+
+                autoQuality.addEventListener('click', () => {
                     setVideoQuality('auto');
                     updateActiveQuality('auto');
                 });
             }
-            
+
             function updateQualityMenu(tracks) {
-                // Clear previous options
                 availableQualities = [];
-                
-                // Clear previous quality options except auto
                 while (qualityOptions.firstChild) {
                     qualityOptions.removeChild(qualityOptions.firstChild);
                 }
-                
-                if (!tracks || tracks.length === 0) {
-                    return;
-                }
-                
-                // Sort tracks by height (resolution) in descending order
+
+                if (!tracks || tracks.length === 0) return;
+
                 tracks.sort((a, b) => b.height - a.height);
-                
-                // Track unique resolutions to prevent duplicates
-                const uniqueResolutions = new Set();
-                
-                // Process tracks to get best bitrate for each resolution
                 const bestQualityByResolution = {};
-                
+
                 tracks.forEach(track => {
-                    // Only process video tracks with height information
                     if (track.type === 'variant' && track.height) {
                         const resolution = track.height;
-                        // If we haven't seen this resolution or this has better quality
                         if (!bestQualityByResolution[resolution] || 
                             track.bandwidth > bestQualityByResolution[resolution].bandwidth) {
                             bestQualityByResolution[resolution] = {
@@ -408,97 +474,82 @@
                         }
                     }
                 });
-                
-                // Create menu items for each unique resolution (best quality)
+
                 Object.values(bestQualityByResolution)
-                    .sort((a, b) => b.height - a.height) // Sort high to low resolution
+                    .sort((a, b) => b.height - a.height)
                     .forEach(quality => {
                         const qualityName = `${quality.height}p`;
-                        
                         availableQualities.push({
                             name: qualityName,
                             height: quality.height,
                             bandwidth: quality.bandwidth
                         });
-                        
+
                         const qualityItem = document.createElement('div');
                         qualityItem.className = 'quality-menu-item';
                         qualityItem.innerHTML = `<i class="fas fa-circle-thin"></i> ${qualityName}`;
                         qualityItem.dataset.quality = qualityName;
                         qualityItem.dataset.height = quality.height;
                         qualityItem.dataset.bandwidth = quality.bandwidth;
-                        
+
                         qualityItem.addEventListener('click', function() {
                             const quality = this.dataset.quality;
                             setVideoQuality(quality, parseInt(this.dataset.height), parseInt(this.dataset.bandwidth));
                             updateActiveQuality(quality);
                         });
-                        
+
                         qualityOptions.appendChild(qualityItem);
                     });
-                
-                // Set auto as default active
+
                 updateActiveQuality('auto');
             }
-            
+
             function updateActiveQuality(quality) {
-                // Remove active class from all items
                 const items = document.querySelectorAll('.quality-menu-item');
                 items.forEach(item => {
                     item.classList.remove('active');
                     const icon = item.querySelector('i');
-                    if (icon) {
-                        icon.className = 'fas fa-circle-thin';
-                    }
+                    if (icon) icon.className = 'fas fa-circle-thin';
                 });
-                
-                // Add active class to selected quality
+
                 if (quality === 'auto') {
                     autoQuality.classList.add('active');
                     const icon = autoQuality.querySelector('i');
-                    if (icon) {
-                        icon.className = 'fas fa-check';
-                    }
+                    if (icon) icon.className = 'fas fa-check';
                 } else {
                     const selectedItem = document.querySelector(`.quality-menu-item[data-quality="${quality}"]`);
                     if (selectedItem) {
                         selectedItem.classList.add('active');
                         const icon = selectedItem.querySelector('i');
-                        if (icon) {
-                            icon.className = 'fas fa-check';
-                        }
+                        if (icon) icon.className = 'fas fa-check';
                     }
                 }
-                
+
                 currentQuality = quality;
             }
-            
+
             function setVideoQuality(quality, height, bandwidth) {
                 if (!shakaPlayer) return;
-                
+
                 if (quality === 'auto') {
-                    // Enable adaptive bitrate streaming (auto)
                     shakaPlayer.configure('abr.enabled', true);
                     console.log('Set quality to Auto');
                 } else {
-                    // Disable adaptive bitrate for manual selection
                     shakaPlayer.configure('abr.enabled', false);
-                    
-                    // Select tracks with specified height
                     const tracks = shakaPlayer.getVariantTracks();
                     const selectedTrack = tracks.find(track => 
                         track.height === height && track.bandwidth === bandwidth);
-                    
+
                     if (selectedTrack) {
-                        shakaPlayer.selectVariantTrack(selectedTrack, /* clearBuffer */ false);
+                        shakaPlayer.selectVariantTrack(selectedTrack, false);
                         console.log(`Set quality to ${quality} (${selectedTrack.height}p)`);
                     }
                 }
-                
-                // Close the menu after selection
+
                 qualityMenu.classList.remove('visible');
+                showControls();
             }
-            
+
             function togglePlayPause() {
                 if (video.paused || video.ended) {
                     video.play();
@@ -506,21 +557,16 @@
                     video.pause();
                 }
             }
-            
+
             function updatePlayPauseButton() {
-                if (video.paused) {
-                    playIcon.className = 'fas fa-play';
-                } else {
-                    playIcon.className = 'fas fa-pause';
-                }
+                playIcon.className = video.paused ? 'fas fa-play' : 'fas fa-pause';
             }
-            
+
             function toggleFullScreen() {
                 if (!document.fullscreenElement && 
                     !document.mozFullScreenElement && 
                     !document.webkitFullscreenElement && 
                     !document.msFullscreenElement) {
-                    // Enter fullscreen
                     if (videoContainer.requestFullscreen) {
                         videoContainer.requestFullscreen();
                     } else if (videoContainer.mozRequestFullScreen) {
@@ -530,11 +576,9 @@
                     } else if (videoContainer.msRequestFullscreen) {
                         videoContainer.msRequestFullscreen();
                     } else if (video.webkitEnterFullscreen) {
-                        // iOS Safari
                         video.webkitEnterFullscreen();
                     }
                 } else {
-                    // Exit fullscreen
                     if (document.exitFullscreen) {
                         document.exitFullscreen();
                     } else if (document.mozCancelFullScreen) {
@@ -546,29 +590,21 @@
                     }
                 }
             }
-            
+
             function updateFullscreenButton() {
-                if (document.fullscreenElement) {
-                    fullscreenIcon.className = 'fas fa-compress';
-                } else {
-                    fullscreenIcon.className = 'fas fa-expand';
-                }
+                fullscreenIcon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
             }
-            
+
             function startStreamMonitoring() {
-                // Check for stream health and delay every second
                 setInterval(checkStreamDelay, 1000);
-                
-                // Listen for buffering events
-                video.addEventListener('waiting', function() {
+
+                video.addEventListener('waiting', () => {
                     updateLiveStatus(false);
                 });
-                
-                video.addEventListener('playing', function() {
-                    // Reset delay if playback resumes
+
+                video.addEventListener('playing', () => {
                     if (!isLive) {
-                        // Give a small grace period before considering it back to live
-                        setTimeout(function() {
+                        setTimeout(() => {
                             if (!video.paused) {
                                 updateLiveStatus(true);
                             }
@@ -576,41 +612,36 @@
                     }
                 });
             }
-            
+
             function checkStreamDelay() {
-                if (!video.paused) {
-                    // Check if there's any buffering
-                    if (shakaPlayer && shakaPlayer.getBufferedInfo) {
-                        const bufferInfo = shakaPlayer.getBufferedInfo();
-                        const currentTime = video.currentTime;
-                        
-                        // If there are any buffered ranges
-                        if (bufferInfo.total.length > 0) {
-                            // Calculate how far we are from live edge
-                            const lastBufferEnd = bufferInfo.total[bufferInfo.total.length - 1].end;
-                            const liveEdgeDelay = Math.max(0, lastBufferEnd - currentTime);
-                            
-                            // If we're more than 3 seconds behind, consider it delayed
-                            if (liveEdgeDelay > 3) {
-                                updateLiveStatus(false, Math.floor(liveEdgeDelay));
-                            } else {
-                                updateLiveStatus(true);
-                            }
+                if (!video.paused && shakaPlayer && shakaPlayer.getBufferedInfo) {
+                    const bufferInfo = shakaPlayer.getBufferedInfo();
+                    const currentTime = video.currentTime;
+
+                    if (bufferInfo.total.length > 0) {
+                        const lastBufferEnd = bufferInfo.total[bufferInfo.total.length - 1].end;
+                        const liveEdgeDelay = Math.max(0, lastBufferEnd - currentTime);
+
+                        if (liveEdgeDelay > 3) {
+                            updateLiveStatus(false, Math.floor(liveEdgeDelay));
+                        } else {
+                            updateLiveStatus(true);
                         }
                     }
                 }
             }
-            
+
             function updateLiveStatus(isLiveNow, delay = 0) {
                 isLive = isLiveNow;
-                
+
                 if (isLiveNow) {
                     liveIndicator.classList.remove('delayed');
-                    delayIndicator.style.display = 'none';
+                    liveIndicator.style.display = 'flex';
+                    delayIndicator.classList.remove('visible');
                     delayAmount = 0;
                 } else {
-                    liveIndicator.classList.add('delayed');
-                    delayIndicator.style.display = 'flex';
+                    liveIndicator.style.display = 'none';
+                    delayIndicator.classList.add('visible');
                     delayAmount = delay;
                     delaySeconds.textContent = delay;
                 }
@@ -622,19 +653,13 @@
                     return;
                 }
 
-                // Initialize Shaka Player
                 shakaPlayer = new shaka.Player(video);
-                
-                // Listen for errors
                 shakaPlayer.addEventListener('error', onErrorEvent);
-                
-                // Listen for track changes to update quality menu
-                shakaPlayer.addEventListener('trackschanged', function() {
+                shakaPlayer.addEventListener('trackschanged', () => {
                     const tracks = shakaPlayer.getVariantTracks();
                     updateQualityMenu(tracks);
                 });
 
-                // Configure player
                 shakaPlayer.configure({
                     streaming: {
                         rebufferingGoal: 2,
@@ -645,10 +670,8 @@
                 });
 
                 if (config.type === "mpd" && config.keys && config.keys.length > 0) {
-                    // Set up DRM
                     const clearKeys = {};
                     clearKeys[config.keys[0].k1] = config.keys[0].k2;
-                    
                     shakaPlayer.configure({
                         drm: {
                             clearKeys: clearKeys,
@@ -661,15 +684,11 @@
                     });
                 }
 
-                // Load the manifest
-                shakaPlayer.load(config.url).then(function() {
+                shakaPlayer.load(config.url).then(() => {
                     console.log('Video loaded successfully');
-                    // Auto play when ready
                     video.play().catch(e => {
-                        console.log('Auto-play was prevented. Please interact with the page first.');
-                        // Show controls if autoplay was prevented
-                        const controls = document.querySelector('.video-controls');
-                        controls.style.opacity = 1;
+                        console.log('Auto-play was prevented');
+                        showControls();
                     });
                 }).catch(onError);
             }
@@ -683,7 +702,20 @@
                 document.getElementById('error').textContent = 'Error loading video: ' + error.message;
                 document.getElementById('error').style.display = 'block';
             }
-        } // End of main code block
+
+            function showControls() {
+                const controls = document.querySelector('.video-controls');
+                clearTimeout(controlsTimeout);
+                controls.classList.add('visible');
+                controlsTimeout = setTimeout(hideControls, 3000);
+            }
+
+            function hideControls() {
+                const controls = document.querySelector('.video-controls');
+                controls.classList.remove('visible');
+                qualityMenu.classList.remove('visible');
+            }
+        }
     </script>
 </body>
 </html>
