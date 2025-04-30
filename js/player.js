@@ -40,7 +40,8 @@ function initPlayer() {
             rebufferingGoal: 2,
             bufferingGoal: 10,
             bufferBehind: 30,
-            lowLatencyMode: true
+            lowLatencyMode: true,
+            autoStart: true
         }
     });
 
@@ -61,8 +62,8 @@ function initPlayer() {
 
     shakaPlayer.load(config.url).then(() => {
         console.log('Video loaded successfully');
-        video.play().catch(e => {
-            console.log('Auto-play was prevented');
+        video.play().catch(error => {
+            console.log('Auto-play was prevented:', error);
             showControls(); // From controls.js
         });
     }).catch(onError);
