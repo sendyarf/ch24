@@ -1,5 +1,8 @@
 let shakaPlayer = null;
 let video = null;
+let retryCount = 0;
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 5000; // 5 seconds
 
 function initApp() {
     video = document.getElementById('player');
@@ -35,6 +38,10 @@ function initPlayer() {
         updateQualityMenu(tracks); // From quality.js
     });
 
+    // Add event listeners for video errors
+    video.addEventListener('error', handleVideoError);
+    video.addEventListener('stalled', handleVideoError);
+
     shakaPlayer.configure({
         streaming: {
             rebufferingGoal: 2,
@@ -62,6 +69,8 @@ function initPlayer() {
 
     shakaPlayer.load(config.url).then(() => {
         console.log('Video loaded successfully');
+        document.getElementById('error').style.display = 'none';
+        retryCount = 0; // Reset retry count on successful load
         video.play().catch(error => {
             console.log('Auto-play was prevented:', error);
             showControls(); // From controls.js
@@ -75,8 +84,29 @@ function onErrorEvent(event) {
 
 function onError(error) {
     console.error('Error code', error.code, 'object', error);
-    document.getElementById('error').textContent = 'Error loading video: ' + error.message;
-    document.getElementById('error').style.display = 'block';
+    handleVideoError();
+}
+
+function handleVideoError() {
+    console.log('Video error detected, retry count:', retryCount);
+    if (retryCount < MAX_RETRIES) {
+        retryCount++;
+        document.getElementById('error').textContent = `Mencoba memuat ulang (${retryCount}/${MAX_RETRIES})...`;
+        document.getElementById('error').style.display = 'block';
+        
+        // Stop current player
+        if (shakaPlayer) {
+            shakaPlayer.unload();
+        }
+
+        // Try to reload after delay
+        setTimeout(() => {
+            initPlayer();
+        }, RETRY_DELAY);
+    } else {
+        document.getElementById('error').textContent = 'Gagal memuat video setelah beberapa kali mencoba.';
+        document.getElementById('error').style.display = 'block';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
