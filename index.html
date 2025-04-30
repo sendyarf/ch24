@@ -5,13 +5,14 @@
     <meta content='noindex, nofollow, noarchive' name='robots'/>
     <meta content='no-referrer' name='referrer'/>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js'></script>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
     <link href='css/styles.css' rel='stylesheet'/>
 </head>
 <body>
     <div class='ViostreamIframe'>
         <div id='videoContainer'>
-            <video id='player' playsinline='' webkit-playsinline='' muted></video>
+            <video id='player' playsinline='' webkit-playsinline=''></video>
             
             <div class='quality-menu' id='qualityMenu'>
                 <div class='quality-menu-title'>Video Quality</div>
@@ -21,11 +22,29 @@
                 </div>
             </div>
             
+            <div class='context-menu' id='contextMenu'>
+                <div class='context-menu-item info' id='videoInfo'>Memuat informasi...</div>
+                <div class='context-menu-item' id='copyUrl'>
+                    <i class='fas fa-copy'></i> Salin URL Video
+                </div>
+                <div class='context-menu-item info'>
+                    <i class='fas fa-info-circle'></i> Powered by Futbol404
+                </div>
+            </div>
+            
             <div class='video-controls'>
                 <div class='control-left'>
                     <button class='control-button' id='playPauseBtn' aria-label='Play/Pause'>
                         <i class='fas fa-play' id='playIcon'></i>
                     </button>
+                    <div class='volume-container'>
+                        <button class='control-button' id='volumeBtn' aria-label='Volume Control'>
+                            <i class='fas fa-volume-up' id='volumeIcon'></i>
+                        </button>
+                        <div class='volume-slider-container' id='volumeSliderContainer'>
+                            <input type='range' min='0' max='100' value='100' class='volume-slider' id='volumeSlider'>
+                        </div>
+                    </div>
                     <div class='live-indicator' id='liveIndicator'>
                         <span class='dot'></span>LIVE
                     </div>
@@ -34,8 +53,8 @@
                     </div>
                 </div>
                 <div class='control-right'>
-                    <a class='logo' href='' target='_blank' aria-label='Brand Logo'>
-                        <img alt='Futbol404 Logo' src='assets/images/logo.png' onerror='this.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="'>
+                    <a class='logo' href='https://linktr.ee/futbol404' target='_blank' aria-label='Brand Logo'>
+                        <img alt='Futbol404 Logo' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg01MWui2j9yeMDbKrY1yZZYNHDtDUEyu9ANsm4oiaVxR0RrUwweJDHvpPqn2ipzlNAjz8tyvLiYlXJ2v0nmsIzwonoP_og483vPNENopMnHiihmzhDmAcSkU4ne7MxW5V8YuiKJ4pCUml9Uh8Cq4mpn2wTVkwncDHN2rvVusK_5ZZgz231lCIMKKWWo_fB/s320/GOVOETLOGO.png' onerror='this.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="'>
                     </a>
                     <button class='control-button' id='qualityBtn' aria-label='Quality Settings'>
                         <i class='fas fa-cog'></i>
@@ -49,7 +68,6 @@
     </div>
     <div id='error' style='display: none;'>Access Denied</div>
     
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js'></script>
     <script src='js/channels.js'></script>
     <script src='js/utils.js'></script>
     <script src='js/player.js'></script>

@@ -144,6 +144,63 @@ video {
     object-fit: contain;
 }
 
+/* Volume control */
+.volume-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.volume-slider-container {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    border-radius: 6px;
+    padding: 8px;
+    display: none;
+    z-index: 20;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    width: 120px;
+}
+
+.volume-slider-container.visible {
+    display: block;
+}
+
+.volume-slider {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(to right, #fff 0%, #fff var(--volume), #666 var(--volume), #666 100%);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: background 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
 /* Quality menu */
 .quality-menu {
     position: absolute;
@@ -196,6 +253,52 @@ video {
     text-align: center;
 }
 
+/* Context menu for right-click */
+.context-menu {
+    position: absolute;
+    background: rgba(0,0,0,0.9);
+    border-radius: 6px;
+    padding: 10px;
+    z-index: 30;
+    display: none;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    color: #fff;
+    font-size: 12px;
+}
+
+.context-menu.visible {
+    display: block;
+}
+
+.context-menu-item {
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+}
+
+.context-menu-item:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.context-menu-item.info {
+    cursor: default;
+    background: none;
+    opacity: 0.8;
+}
+
+.context-menu-item.info:hover {
+    background: none;
+}
+
+.context-menu-item i {
+    width: 16px;
+    text-align: center;
+}
+
 /* Fullscreen fixes */
 :fullscreen, :-webkit-full-screen, :-moz-full-screen, :-ms-fullscreen { 
     width: 100vw; 
@@ -207,8 +310,6 @@ video {
     50% { opacity: 0.3; }
     100% { opacity: 1; }
 }
-
-
 
 /* Prevent text selection */
 * {
@@ -230,6 +331,12 @@ video {
     .quality-menu {
         min-width: 140px;
     }
+    .volume-slider-container {
+        width: 100px;
+    }
+    .volume-slider {
+        width: 100%;
+    }
     .live-indicator, .delay-indicator {
         padding: 5px 10px;
         font-size: clamp(9px, 2vw, 11px);
@@ -239,6 +346,10 @@ video {
         height: 7px;
     }
     .delay-indicator i {
+        font-size: 11px;
+    }
+    .context-menu {
+        min-width: 180px;
         font-size: 11px;
     }
 }
