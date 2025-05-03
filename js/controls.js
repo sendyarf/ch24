@@ -12,7 +12,6 @@ let volumeSlider = null;
 let volumeSliderContainer = null;
 let contextMenu = null;
 let videoInfo = null;
-let copyUrl = null;
 let isLive = true;
 let delayAmount = 0;
 let controlsTimeout = null;
@@ -32,7 +31,6 @@ function setupCustomControls() {
     volumeSliderContainer = document.getElementById('volumeSliderContainer');
     contextMenu = document.getElementById('contextMenu');
     videoInfo = document.getElementById('videoInfo');
-    copyUrl = document.getElementById('copyUrl');
 
     // Initialize video volume
     video.volume = 1.0;
@@ -161,15 +159,6 @@ function setupContextMenu() {
         const status = isLive ? 'LIVE' : `Delayed (${delayAmount}s)`;
         const resolution = currentQuality === 'auto' ? 'Auto' : currentQuality;
         videoInfo.textContent = `Judul: ${title} | Resolusi: ${resolution} | Status: ${status}`;
-    });
-
-    copyUrl.addEventListener('click', () => {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            alert('URL video disalin ke clipboard!');
-        }).catch(() => {
-            alert('Gagal menyalin URL.');
-        });
-        contextMenu.classList.remove('visible');
     });
 
     // Close context menu on any click outside the menu
