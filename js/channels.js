@@ -630,6 +630,14 @@ const ConfiguracionCanales = {
         ],
         title: "Go 3 Sport Open"
     },
+    "TRT1": {
+        url: "https://live-video.dpgmedia.net/f1d26a28c95485cc/out/v1/6810477d8b1b4e458506df3803486870/index.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "a23c541ad1334ea697bab962336d31e6", k2: "996515f9b655011b20993c5514298eb3" }
+        ],
+        title: "TRT 1"
+    },
     "XXX": {
         url: "XXX",
         type: "mpd",
