@@ -614,7 +614,6 @@ const ConfiguracionCanales = {
         ],
         title: "SPORT1LT Live"
     },
-    
     "SPORT2LT": {
         url: "https://tr.live.cdn.cgates.lt/live/dash/561209/index.mpd",
         type: "mpd",
@@ -622,6 +621,30 @@ const ConfiguracionCanales = {
             { k1: "5fd3f407ea7c465b854db7cd8235b39b", k2: "0c2ad3408bb09f698e86e1ca2e26a888" }
         ],
         title: "SPORT2LT Live"
+    },
+    "TRINGSPORT1": {
+        url: "https://tr.live.cdn.cgates.lt/live/dash/561402/index.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "a6b967afcb974bb5a549377b4f09befd", k2: "87d993257a099324ccd0215475fc61a0" }
+        ],
+        title: "Tring Sport 1"
+    },
+    "TRINGSPORT2": {
+        url: "https://tr.live.cdn.cgates.lt/live/dash/560505/index.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "8315b1996d92477b965cb29100a3dc07", k2: "0081c0674e9047e219caa27a07da9d4b" }
+        ],
+        title: "Tring Sport 2"
+    },
+    "XXX": {
+        url: "XXX",
+        type: "mpd",
+        keys: [
+            { k1: "XXX", k2: "XXX" }
+        ],
+        title: "XXX Live"
     },
     
     
