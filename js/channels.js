@@ -628,7 +628,7 @@ const ConfiguracionCanales = {
         keys: [
             { k1: "a6b967afcb974bb5a549377b4f09befd", k2: "87d993257a099324ccd0215475fc61a0" }
         ],
-        title: "Go 3 Open"
+        title: "Go 3 Sport Open"
     },
     "XXX": {
         url: "XXX",
