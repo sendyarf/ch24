@@ -638,13 +638,37 @@ const ConfiguracionCanales = {
         ],
         title: "TRT 1"
     },
+    "RTLCLUB": {
+        url: "https://live-video.dpgmedia.net/f1d26a28c95485cc/out/v1/6810477d8b1b4e458506df3803486870/index.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "a23c541ad1334ea697bab962336d31e6", k2: "996515f9b655011b20993c5514298eb3" }
+        ],
+        title: "RTL CLUB"
+    },
+    "RTLTVI": {
+        url: "https://live-video.dpgmedia.net/6180c994cb835402/out/v1/24eb589d8c1d473bb1234991a6a774ef/index.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "62aadc845ce948d9adddd73a3f3fb4f2", k2: "3bbaae09a9ea8594a85a707f50907154" }
+        ],
+        title: "RTL TVI"
+    },
     "XXX": {
         url: "XXX",
         type: "mpd",
         keys: [
             { k1: "XXX", k2: "XXX" }
         ],
-        title: "XXX Live"
+        title: "XXXX"
+    },
+    "XXX": {
+        url: "XXX",
+        type: "mpd",
+        keys: [
+            { k1: "XXX", k2: "XXX" }
+        ],
+        title: "XXXX"
     },
     
     
