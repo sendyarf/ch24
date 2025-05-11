@@ -302,10 +302,10 @@ const ConfiguracionCanales = {
         title: "SPORTTV2 Live"
     },
     "TELEMUNDO": {
-        "url": "https://fsly.stream.peacocktv.com/Content/CMAF_OL1-CTR-4s/Live/channel(kvea)/master.mpd",
+        "url": "https://live-oneapp-prd-news.akamaized.net/Content/CMAF_OL1-CTR-4s/Live/channel(WSNS)/master.mpd",
         "type": "mpd",
         "keys": [
-            { "k1": "dfb59142ce523a6c900758d5ee4c7997", "k2": "bd2d684e590815190eda056a6d9618bc" }
+            { "k1": "7d6bb9f86e133e4cb33440b493b6b672", "k2": "584ad285dcb9e7d42cf3e93f1cc3fe11" }
         ],
         title: "TELEMUNDO Live"
     },
