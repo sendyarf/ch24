@@ -194,7 +194,7 @@ const ConfiguracionCanales = {
         title: "BAHRAINSP2 Live"
     },
     "DAZN1ES": {
-        "url": "https://live.ll.ww.aiv-cdn.net/OTTB/dub-nitro/live/clients/dash/enc/bmnelo5c7a/out/v1/3ce2cdc4589f46189322bd3717c77957/cenc.mpd",
+        "url": "https://otte.live.fly.ww.aiv-cdn.net/dub-nitro/live/dash/enc/bmnelo5c7a/out/v1/3ce2cdc4589f46189322bd3717c77957/cenc.mpd",
         "type": "mpd",
         "keys": [
             { "k1": "44dd9cd370b08a868ead115fe84ecfde", "k2": "bff19ab0a51cf14e848389b152913fd0" }
@@ -202,7 +202,7 @@ const ConfiguracionCanales = {
         title: "DAZN1ES Live"
     },
     "DAZN2ES": {
-        "url": "https://live.ll.ww.aiv-cdn.net/OTTB/dub-nitro/live/clients/dash/enc/xnk4m9bnxt/out/v1/4ced7b7329a54652b9bb0521ed38bd4d/cenc.mpd",
+        "url": "https://otte.live.fly.ww.aiv-cdn.net/dub-nitro/live/dash/enc/xnk4m9bnxt/out/v1/4ced7b7329a54652b9bb0521ed38bd4d/cenc.mpd",
         "type": "mpd",
         "keys": [
             { "k1": "0eab5a3f3e3b4ba5d42d40ca30d17571", "k2": "f3f061ded9b70e8160590d5802ecda6d" }
@@ -654,13 +654,29 @@ const ConfiguracionCanales = {
         ],
         title: "RTL TVI"
     },
-    "XXX": {
-        url: "XXX",
+    "BEIN1AUS": {
+        url: "https://a122aivottlinear-a.akamaihd.net/OTTB/syd-nitro/live/clients/dash/enc/pwdvd9fm5u/out/v1/5e22845dab3648b8a7033fd5923d62d1/cenc.mpd",
         type: "mpd",
         keys: [
-            { k1: "XXX", k2: "XXX" }
+            { k1: "f959dcdd1ca8c89658cd651ed36e2851", k2: "aa4cf56ce7c522a9e6582c42537be381" }
         ],
-        title: "XXXX"
+        title: "BEIN Sports 1"
+    },
+    "BEIN2AUS": {
+        url: "https://a36aivottlinear-a.akamaihd.net/OTTB/syd-nitro/live/clients/dash/enc/6fbnr3ei4b/out/v1/57d2ae96a4cc4230881cd801b389edf6/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "9afd72f20573001c23672d2158892a5f", k2: "9bc32df48a2efac30072b7e5c683bcd1" }
+        ],
+        title: "BEIN Sports 2"
+    },
+    "BEIN3AUS": {
+        url: "https://a83aivottlinear-a.akamaihd.net/OTTB/syd-nitro/live/clients/dash/enc/gigxsk0lya/out/v1/df75d887bce4437b8fdf345ae455113b/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "4b203316c47c370a1eb9097c070d7226", k2: "676e6783f23789cdf4ff0486386145ed" }
+        ],
+        title: "BEIN Sports 3"
     },
     "XXX": {
         url: "XXX",
