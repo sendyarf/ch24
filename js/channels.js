@@ -678,6 +678,14 @@ const ConfiguracionCanales = {
         ],
         title: "BEIN Sports 3"
     },
+    "DAZN1DE": {
+        url: "https://a122aivottlinear-a.akamaihd.net/OTTB/fra-nitro/live/clients/dash/enc/k2dcwnlpgr/out/v1/0502dc73a24b43a79c042bf2d14f6b84/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "0c900a7eae0097e0977141b68c9bffc4", k2: "fa534e6d48eccf905a449051a5e280c8" }
+        ],
+        title: "DAZN 1 DE"
+    },
     "XXX": {
         url: "XXX",
         type: "mpd",
