@@ -686,6 +686,54 @@ const ConfiguracionCanales = {
         ],
         title: "DAZN 1 DE"
     },
+    "TNT1": {
+        url: "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/wf8usag51e/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "ae26845bd33038a9c0774a0981007294", k2: "63ac662dde310cfb4cc6f9b43b34196d" }
+        ],
+        title: "TNT 1"
+    },
+    "TNT2": {
+        url: "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/f0qvkrra8j/out/v1/f8fa17f087564f51aa4d5c700be43ec4/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "6d1708b185c6c4d7b37600520c7cc93c", k2: "1aace05f58d8edef9697fd52cb09f441" }
+        ],
+        title: "TNT 2"
+    },
+    "TNT3": {
+        url: "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/lsdasbvglv/out/v1/bb548a3626cd4708afbb94a58d71dce9/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "4e993aa8c1f295f8b94e8e9e6f6d0bfe", k2: "86a1ed6e96caab8eb1009fe530d2cf4f" }
+        ],
+        title: "TNT 3"
+    },
+    "TNT4": {
+        url: "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/i2pcjr4pe5/out/v1/912e9db56d75403b8a9ac0a719110f36/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "e31a5a81caff5d07ea2411a571fc2e59", k2: "96c5ef69479732ae734f962748c19729" }
+        ],
+        title: "TNT 4"
+    },
+    "TNT5": {
+        url: "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/gesdwrdncn/out/v1/79e752f1eccd4e18b6a8904a0bc01f2d/cenc.mpd",
+        type: "mpd",
+        keys: [
+            { k1: "60c0d9b41475e01db4ffb91ed557fbcc", k2: "36ee40e58948ca15e3caba8d47b8f34b" }
+        ],
+        title: "TNT 5"
+    },
+    "XXX": {
+        url: "XXX",
+        type: "mpd",
+        keys: [
+            { k1: "XXX", k2: "XXX" }
+        ],
+        title: "XXXX"
+    },
     "XXX": {
         url: "XXX",
         type: "mpd",
