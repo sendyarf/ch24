@@ -22,6 +22,10 @@ function initApp() {
     initPlayer();
 }
 
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 function initPlayer() {
     const id = getParameterByName('id'); // From utils.js
     const config = ConfiguracionCanales[id]; // From channels.js
@@ -42,51 +46,60 @@ function initPlayer() {
     video.addEventListener('error', handleVideoError);
     video.addEventListener('stalled', handleVideoError);
 
-    shakaPlayer.configure({
+    // Konfigurasi dasar
+    const playerConfig = {
         streaming: {
-            rebufferingGoal: 1,  
-            bufferingGoal: 5,    
-            bufferBehind: 10,    
+            rebufferingGoal: isMobileDevice() ? 0.5 : 1,
+            bufferingGoal: isMobileDevice() ? 3 : 5,
+            bufferBehind: isMobileDevice() ? 5 : 10,
             lowLatencyMode: true,
             autoStart: true,
             buffering: {
                 enabled: true,
-                minBufferedTarget: 0.2,  
-                maxBufferedTarget: 5,    
-                bufferedTarget: 0.5       
+                minBufferedTarget: isMobileDevice() ? 0.1 : 0.2,
+                maxBufferedTarget: isMobileDevice() ? 3 : 5,
+                bufferedTarget: isMobileDevice() ? 0.3 : 0.5
             },
             retryParameters: {
                 maxAttempts: 3,
                 baseDelay: 1000,
-                backoffFactor: 2,
+                backoffFactor: 1.5,
                 fuzzFactor: 0.5
-            },
-            failure: {
-                streamingFailureLimit: 3
             }
         },
         abr: {
             enabled: true,
-            defaultBandwidthEstimate: 2000000,  
-            bandwidthUpgradeTarget: 0.85,
-            bandwidthDowngradeTarget: 0.9,
-            switchInterval: 2
+            defaultBandwidthEstimate: isMobileDevice() ? 800000 : 2000000,
+            bandwidthUpgradeTarget: 0.9,
+            bandwidthDowngradeTarget: 0.95,
+            switchInterval: 2,
+            restrictions: {
+                minWidth: isMobileDevice() ? 320 : 640,
+                minHeight: isMobileDevice() ? 180 : 360,
+                minPixels: isMobileDevice() ? 320 * 180 : 640 * 360,
+                maxWidth: window.screen.width,
+                maxHeight: window.screen.height
+            }
         },
         manifest: {
             dash: {
-                ignoreMinBufferTime: true,  
-                ignoreSuggestedPresentationDelay: true,
                 ignoreMinBufferTime: true,
+                ignoreSuggestedPresentationDelay: true,
                 autoCorrectDrift: true,
                 ignoreLiveEdge: true
-            },
-            retryParameters: {
-                maxAttempts: 3,
-                baseDelay: 1000,
-                backoffFactor: 1.5
             }
         }
-    });
+    };
+
+    // Terapkan konfigurasi
+    shakaPlayer.configure(playerConfig);
+
+    // Optimasi untuk iOS
+    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) {
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('muted', 'true');
+        video.muted = true;
+    }
 
     if (config.type === "mpd" && config.keys && config.keys.length > 0) {
         const clearKeys = {};
