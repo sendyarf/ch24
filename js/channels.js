@@ -436,7 +436,7 @@ const ConfiguracionCanales = {
         title: "EPLTV Live"
     },
     "GTV": {
-        url: "https://av-ch-cdn.mncnow.id/live/eds/GTV-HD/sa_dash_vmx/GTV-HD.mpd",
+        url: "https://av-ch-cdn.mncnow.id/live/eds/GTV-HD/sa_dash/GTV-HD.mpd",
         type: "mpd",
         keys: [
             { k1: "88f6c7cbd793374cb5f12d7e26dcd63b", k2: "e82daa7c7bfb03d99327463fdbd37336" }
